@@ -4,7 +4,7 @@ clc;
 
 %%
 k = 3;
-D = 10;
+D = 20;
 len = 0.6;
 fc = 400;
 T = D/fc;
@@ -15,6 +15,7 @@ n = 20;
 time = 10;
 %%
 record(ar), pause(time), stop(ar);
+% record(ar),sound(signal,fs),pause(time),stop(ar);
 rcv = getaudiodata(ar);
 %%
 y = synchronizationRX(rcv,fs,len);

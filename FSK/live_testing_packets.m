@@ -4,7 +4,7 @@ clc;
 
 %%
 k = 3;
-D = 10;
+D = 20;
 len = 0.6;
 fc = 400;
 T = D/fc;
@@ -12,8 +12,8 @@ fs = 48000;
 C = makeCodebook(k,fc,fs,D);
 ar = audiorecorder(fs,16,1);
 numSym = 20;
-numPack = 5;
-time = 10;
+numPack = 1;
+time = 2;
 %%
 record(ar), pause(time), stop(ar);
 % record(ar),sound(signal,fs),pause(time),stop(ar);
