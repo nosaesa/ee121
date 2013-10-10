@@ -12,10 +12,11 @@ fs = 48000;
 C = makeCodebook(k,fc,fs,D);
 ar = audiorecorder(fs,16,1);
 n = 20;
-time = 5;
+time = 10;
 %%
 record(ar), pause(time), stop(ar);
 rcv = getaudiodata(ar);
+%%
 y = synchronizationRX(rcv,fs,len);
 b = zeros(1,n);
 pad = ceil(length(y)/(T*fs));
