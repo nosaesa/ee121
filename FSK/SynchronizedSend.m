@@ -9,7 +9,7 @@ s_chirp= sin(2*pi*f_of_t.*t)*.5;
 r = 3;
 y = [];
 %Number of symbols being sent
-n = 100;
+n = 20;
 
 %Number of periods for tones to last
 D = 10;

@@ -16,7 +16,7 @@ numPack = 1;
 time = 2;
 %%
 record(ar), pause(time), stop(ar);
-% record(ar),sound(signal,fs),pause(time),stop(ar);
+% record(ar),sound(signal,fs),stop(ar);
 rcv = getaudiodata(ar);
 %%
 w = synchronizationRXPackets(rcv,fs,len,numPack,D,fc,numSym);
