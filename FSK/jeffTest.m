@@ -4,7 +4,7 @@ clear all;
 clc;
 %% Chirping Derping Sending Shiz
 fs = 48000;
-fc = 428;
+fc = 400;
 lenchirp = 0.6;
 t = [0:fs*lenchirp-1]/fs;
 f_of_t = 20+t/16*(20000-20);
@@ -12,7 +12,7 @@ s_chirp= sin(2*pi*f_of_t.*t)*.5;
 r = 3;
 y = [];
 %Number of symbols being sent per packet
-numSym = 20;
+numSym = 100;
 %Number of packets
 numPack = 1;
 
@@ -30,16 +30,16 @@ for i = 1:n
    y = [y encodeFSKSync(sent(i),fc,fs,D)]; 
 end
 signal = y;
-rcv = signal;
 
 %%
 ar = audiorecorder(fs,16,1);
-time = 2;
+time = 5;
 %%
-record(ar), pause(time), stop(ar);
-% record(ar),sound(signal,fs),stop(ar);
+%record(ar), pause(time), stop(ar);
+record(ar),sound(signal,fs),pause(time),stop(ar);
 rcv = getaudiodata(ar);
 %%
+rcv = rcv';
 w = synchronizationRXPackets(rcv,fs,lenchirp,numPack,D,fc,numSym);
 b = zeros(numPack,numSym);
 for i = 1:numPack
