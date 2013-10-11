@@ -7,5 +7,5 @@ function y = encodeFSKSyncMulti(m,fc,fs,D,bitNum)
     % D is the number of periods of fc to look at
     T = D/fc;
     t = 0:1/fs:T-1/fs;
-    y = cos(2*pi*m*(fc+bitNum*100)*t);  
+    y = cos(2*pi*m*(fc+bitNum*10)*t);  
 end

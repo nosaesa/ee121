@@ -4,12 +4,12 @@ clear all;
 clc;
 %% Chirping Derping Sending Shiz
 fs = 48000;
-fc = 400;
+fc = 200;
 lenchirp = 0.6;
 t = [0:fs*lenchirp-1]/fs;
 f_of_t = 20+t/16*(20000-20);
 s_chirp= sin(2*pi*f_of_t.*t)*.5;
-r = 3;
+r = 5;
 y = [];
 %Number of symbols being sent per packet
 numSym = 100;
@@ -20,7 +20,7 @@ numPack = 1;
 n = numSym*numPack;
 
 %Number of periods for tones to last
-D = 20;
+D = 3;
 T = D/fc;
 C = makeCodebook(r,fc,fs,D);
 % Generate random bit string and encode
@@ -33,7 +33,7 @@ signal = y;
 
 %%
 ar = audiorecorder(fs,16,1);
-time = 5;
+time = 3;
 %%
 %record(ar), pause(time), stop(ar);
 record(ar),sound(signal,fs),pause(time),stop(ar);
@@ -52,4 +52,3 @@ for i = 1:numPack
         b(i,j) = decodeFSKSync(q(:,j),r,fc,fs,C,D);
     end
 end
-plot(b-sent)

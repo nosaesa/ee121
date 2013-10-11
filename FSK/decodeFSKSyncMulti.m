@@ -1,4 +1,4 @@
-function b = decodeFSKSyncMulti(x,k,fc,fs,C,D,bitNum)
+function b = decodeFSKSyncMulti(x,k,fc,fs,C,D)
     % x is the signal to be decoded, normalized to [-1,1]
     % k is the number of bits in the message
     % T is the duration of the signal to be decoded (in seconds)
