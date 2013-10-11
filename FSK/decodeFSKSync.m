@@ -9,6 +9,7 @@ function b = decodeFSKSync(x,k,fc,fs,C,D)
     t = 0:1/fs:T-1/fs;
     
     result = C*x;
+    result = abs(result);
     
     b = find(result == max(result));
 end
