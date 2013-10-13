@@ -22,6 +22,22 @@ if (length(symbols) ~= length(bits)/rate || sum(symbols > fieldSize))
 else
     fprintf('Packet generation is good!\n');
 end
+%% Tests for turning a file into bits, and then bits into a file
+
+filein = 'sahai.jpg';
+testbits = file2Bits(filein);
+image1 = imread(filein);
+
+fileout = 'sahaiout.jpg';
+newfile = bits2File(testbits, fileout);
+image2 = imread(fileout);
+
+diff = image1 - image2;
+if ( sum(sum(diff)) == 0)
+    fprintf('Image to and from binary works');
+else
+    fprintf('ERROR in image to and from binary works'); 
+end
 
 %% Test packet decoding
 [~, vecs, binary] = makeLookupTable(G, fieldSize);
