@@ -1,3 +1,0 @@
-function [] = buildFile(bits)
-
-end

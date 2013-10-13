@@ -1,4 +1,5 @@
 %% Add some tests here to run before you push anything.
+clear all; close all; clc;
 
 %% Tests for generator matrix
 fieldSize = 7;
@@ -20,4 +21,15 @@ if (length(symbols) ~= length(bits)/rate || sum(symbols > fieldSize))
     fprintf('ERROR in packet generation.\n');
 else
     fprintf('Packet generation is good!\n');
+end
+
+%% Test packet decoding
+[~, vecs, binary] = makeLookupTable(G, fieldSize);
+
+out = decodePackets(symbols, vecs, binary, chunkSize/rate);
+
+if (sum(out ~= bits) ~= 0)
+    fprintf('ERROR in decoding of packets.\n');
+else
+    fprintf('Packet decoding is good!\n');
 end
