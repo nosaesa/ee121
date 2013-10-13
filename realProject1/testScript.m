@@ -49,3 +49,50 @@ if (sum(out ~= bits) ~= 0)
 else
     fprintf('Packet decoding is good!\n');
 end
+
+%% Tests for encoding symbols
+P = 1;
+m = 1:5;
+fc = 400;
+T = P/fc;
+fs = 48000;
+t = 0:1/fs:T-1/fs;
+chunkLength = 5;
+out = encodeFSK(m,fc,chunkLength,P,fs);
+test = zeros(1,length(t));
+% test2 = cos(2*pi*400*t) + cos(2*pi*880*t) + cos(2*pi*1360*t) + cos(2*pi*1840*t) + cos(2*pi*2320*t);
+for i = 0:chunkLength-1
+    test = test + cos(2*pi*(fc*i + i/chunkLength)*t);
+end
+
+if (sum(out - test) > 1e-5)
+    fprintf('ERROR in encoding symbols.\n');
+else
+    fprintf('Symbol encoding is good!\n');
+end
+
+%% Another test for encoding symbols
+
+P = 1;
+m = [1:5 5:-1:1 1:5 5:-1:1];
+fc = 400;
+T = P/fc;
+fs = 48000;
+t = 0:1/fs:T-1/fs;
+chunkLength = 5;
+out = encodeFSK(m,fc,chunkLength,P,fs);
+test = zeros(1,length(t));
+test2 = zeros(1,length(t));
+% test2 = cos(2*pi*400*t) + cos(2*pi*880*t) + cos(2*pi*1360*t) + cos(2*pi*1840*t) + cos(2*pi*2320*t);
+for i = 0:chunkLength-1
+    test = test + cos(2*pi*(fc*i + i/chunkLength)*t);
+end
+for i = 0:chunkLength-1
+    test2 = test2 + cos(2*pi*(fc*(chunkLength-i) + i/chunkLength)*t);
+end
+
+if (sum(out(1,:) - test) > 1e-5 | sum(out(2,:) - test2) > 1e-5)
+    fprintf('ERROR in encoding symbols.\n');
+else
+    fprintf('Symbol encoding is good!\n');
+end
