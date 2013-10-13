@@ -5,5 +5,5 @@ function [packets] = codePacketGenerator(G, bits, fieldSize)
         start = i*chunkSize + 1;
         packets = [packets; G*bits(start:start+chunkSize-1)];
     end
-    packets = mod(packets, 
+    packets = mod(packets, fieldSize);
 end
