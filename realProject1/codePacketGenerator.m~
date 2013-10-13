@@ -1,0 +1,7 @@
+function [packets] = codePacketGenerator(G, bits, chunkSize)
+    packets = zeros(1, bits/chunkSize);
+    for i=1:length(bits/chunkSize)
+        start = (i-1)*chunkSize;
+        packets( G*bits(start+1:start+chunkSize);
+    end
+end
