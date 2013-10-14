@@ -61,10 +61,6 @@ chunkLength = 5;
 out = encodeFSK(m,fc,chunkLength,P,fs);
 test = zeros(1,length(t));
 test = cos(2*pi*400*t)/5 + cos(2*pi*880*t)/5 + cos(2*pi*1360*t)/5 + cos(2*pi*1840*t)/5 + cos(2*pi*2320*t)/5;
-% for i = 0:chunkLength-1
-%     test = test + cos(2*pi*(fc*i + i/chunkLength)*t);
-% end
-
 if (abs(sum(out(1,:) - test)) > 1e-5)
     fprintf('ERROR in encoding symbols.\n');
 else
@@ -81,18 +77,25 @@ fs = 48000;
 t = 0:1/fs:T-1/fs;
 chunkLength = 5;
 out = encodeFSK(m,fc,chunkLength,P,fs);
-test = zeros(1,length(t));
-test2 = zeros(1,length(t));
 test = cos(2*pi*400*t)/5 + cos(2*pi*880*t)/5 + cos(2*pi*1360*t)/5 + cos(2*pi*1840*t)/5 + cos(2*pi*2320*t)/5;
-% for i = 0:chunkLength-1
-%     test = test + cos(2*pi*(fc*i + i/chunkLength)*t);
-% end
-% for i = 0:chunkLength-1
-%     test2 = test2 + cos(2*pi*(fc*(chunkLength-i) + i/chunkLength)*t);
-% end
 test2 = cos(2*pi*2000*t)/5 + cos(2*pi*1680*t)/5 + cos(2*pi*1360*t)/5 + cos(2*pi*1040*t)/5 + cos(2*pi*720*t)/5;
-if (abs(sum(out(1,:) - test)) > 1e-5 || abs(sum(out(3,:) - test || abs(sum(out(2,:) - test2)) > 1e-5)
+if (abs(sum(out(1,:) - test)) > 1e-5 || abs(sum(out(3,:) - test)) > 1e-5 || abs(sum(out(2,:) - test2)) > 1e-5 || abs(sum(out(4,:) - test2)) > 1e-5)
     fprintf('ERROR in encoding symbols.\n');
 else
     fprintf('Symbol encoding is good!\n');
 end
+
+%% Tests for adding chirps
+fs = 48000;
+% Encode this random message then listen for the chirps. There should be 
+% a chirp every 5 tones. There should be 4 chirps.
+y = encodeFSK(randi([1 8],1,100),400,5,100,fs);
+Z = addChirps(y,5,fs);
+Z = Z';
+sound(Z(1:end),fs);
+%%
+
+y = encodeFSK(randi([1 8],1,36000),400,5,5,fs);
+Z = addChirps(y,100,fs);
+Z = Z';
+sound(Z(1:end),fs);
