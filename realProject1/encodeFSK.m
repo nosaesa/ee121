@@ -18,7 +18,7 @@ T = P/fc;
 t = 0:1/fs:T-1/fs;
 n = length(m);
 chunks = n/L;
-D = reshape(m,chunks,L);
+D = (reshape(m,L,chunks))';
 y = zeros(chunks,length(t));
 k = 0:L-1;
 step = k/L;
@@ -26,6 +26,6 @@ R = D + repmat(step,chunks,1);
 F = 2*pi*fc*R;
 for i = 1:L
     Q = F(:,i)*t;
-    y = y + cos(Q);
+    y = y + (1/L)*cos(Q);
 end
 end
