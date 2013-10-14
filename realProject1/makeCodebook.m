@@ -3,6 +3,7 @@ function [ book ] = makeCodebook(fc, fs, P, L, fieldSize)
 %   Detailed explanation goes here
 T = P/fc;
 t = 0:1/fs:T-1/fs;
+
 book = zeros(length(t), L*fieldSize);
 for k = 0:L-1
     C = zeros(length(t), fieldSize);
@@ -11,5 +12,6 @@ for k = 0:L-1
     end
     book(:,k*fieldSize+1:k*fieldSize + fieldSize) = C;
 end
+
 end
 
