@@ -12,12 +12,11 @@ NTSP = packetLength/TSL;
 % NTS = number of time steps
 NTS = floor(numPackets*NTSP);
 S = reshape(A',TSL,NTS)';
-prods = S*codeBook;
+prods = abs(S*codeBook);
 [row, col] = size(prods);
 prods = reshape(prods', fieldSize, col/fieldSize, row); 
 [~, ind] = max(prods);
 packets = reshape(ind, 1, size(ind,2)*size(ind,3));
-keyboard;
 
 end
 

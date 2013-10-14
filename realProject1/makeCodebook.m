@@ -8,7 +8,7 @@ book = zeros(length(t), L*fieldSize);
 for k = 0:L-1
     C = zeros(length(t), fieldSize);
     for s = 1:fieldSize
-        C(:,s) = cos(2*pi*fc*(1+k/L)*s*t);
+        C(:,s) = cos(2*pi*fc*(s+k/L)*t);
     end
     book(:, k*fieldSize+1:k*fieldSize + fieldSize) = C;
 end
