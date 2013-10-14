@@ -1,5 +1,5 @@
 function [A] = synchronize(rcv,packLength,fs,fc,P)
-%SYNCHRONIZE Find chirps and get data streams from rcv
+%SYNCHRONIZE Find chirps then extract packet streams from rcv
 
 t = 0:1/fs:0.02;
 timeStep = 0:1/fs:P/fc-1/fs;
@@ -32,15 +32,19 @@ syncorr = fftshift(abs(syncorr));
 syncorr = syncorr(1:length(syncorr)/2);
 syncPeaks = [startSample zeros(1, numpeaks - 1)]
 [~,sortIndex] = sort(syncorr(:),'descend');
-peaks = 1;
+peaks = 2;
 for i = sortIndex 
     if max(abs(i - find(syncPeaks)) > epsilon
-        
+        syncPeaks(peaks) = i;
         peaks = peaks + 1
-        if peaks >= numPeaks
+        if peaks > numPeaks
             break
         end
     end
 end
+syncPeaks = syncPeaks + 1
+% syncPeaks is now the indices of syncPulses in recieved signal rcv
+% A will be a matrix of Extracted Packets
+A(i,:) = [rcv((syncPulses(i) + length(t)):(syncpulses(i) + packLengthSamples))];
 
 end
