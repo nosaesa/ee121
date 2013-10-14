@@ -107,9 +107,3 @@ A = [pulse Z(length(t)+1:end) pulse];
 B = synchronize(A,packLength,fs,fc,P);
 q = size(y,1)/packLength;
 Y = reshape(y',size(y,2)*packLength,q)';
-if sum(sum(B-Y)) > 1e-5
-    fprintf('Error in ideal synchronization.\n');
-else
-    fprintf('You all good with synchronization.\n');
-end
-    

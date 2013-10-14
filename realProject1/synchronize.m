@@ -20,31 +20,33 @@ for i = sortIndex(2:end)
         break
     end
 end
-startSample = min(maxIndex);
+startSample = min(maxIndex) + 1;
 endSample = max(maxIndex) - 1;
 %-----------------------------------------------
 % Find the actual peaks in the signal and create expected packets
 messageLength = endSample - startSample;
 numPeaks = round(messageLength/packLengthSamples); %floor or round
-i = 0:numPeaks-1;
 syncorr = xcorr(rcv,syncPulse);
 syncorr = fftshift(abs(syncorr));
 syncorr = syncorr(1:length(syncorr)/2);
-syncPeaks = [startSample zeros(1, numpeaks - 1)]
+syncPeaks = [startSample zeros(1, numPeaks)];
 [~,sortIndex] = sort(syncorr(:),'descend');
 peaks = 2;
-for i = sortIndex 
-    if max(abs(i - find(syncPeaks)) > epsilon
-        syncPeaks(peaks) = i;
-        peaks = peaks + 1
+for i = 1:length(sortIndex)
+    if max(abs(sortIndex(i) - find(syncPeaks)) > epsilon)
+        syncPeaks(peaks) = sortIndex(i);
+        peaks = peaks + 1;
         if peaks > numPeaks
             break
         end
     end
 end
-syncPeaks = syncPeaks + 1
+plusOne = ones(1,length(syncPeaks));
+plusOne(1) = 0;
+syncPeaks = syncPeaks + plusOne;
 % syncPeaks is now the indices of syncPulses in recieved signal rcv
 % A will be a matrix of Extracted Packets
-A(i,:) = [rcv((syncPulses(i) + length(t)):(syncpulses(i) + packLengthSamples))];
-
+for i = 1:numPeaks;
+    A(i,:) = [rcv((syncPeaks(i) + length(t)):(syncPeaks(i) + packLengthSamples - 1))];
+end
 end
