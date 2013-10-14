@@ -15,5 +15,4 @@ function [bits] = decodePackets(packets, codeBookVectors, codeBookStr, packetLen
         
         bits = [bits; codeBookStr(index,:)'];
     end
-
 end

@@ -1,9 +1,5 @@
 function [packets] = codePacketGenerator(G, bits, fieldSize)
     chunkSize = size(G, 2);
-    packets = [];
-    for i = 0:length(bits)/chunkSize-1
-        start = i*chunkSize + 1;
-        packets = [packets; G*bits(start:start+chunkSize-1)];
-    end
-    packets = mod(packets, fieldSize);
+    bitMat = reshape(bits, chunkSize, length(bits)/chunkSize);
+    packets = reshape(mod(G*bitMat, fieldSize), 1, length(bits)*(size(G,1)/size(G,2)));
 end
