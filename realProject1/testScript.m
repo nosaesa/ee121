@@ -88,7 +88,8 @@ end
 %% Tests for adding chirps and transmission
 fs = 48000;
 % Encode this random message then listen for the chirps. There should be 
-% a chirp every 5 tones. There should be 4 chirps.
+% a chirp every 5 tones. There should be an inverse chirp at beginning and
+% and end and 3 chirps in between.
 y = encodeFSK(randi([1 8],1,100),400,5,100,fs);
 Z = addChirps(y,5,fs);
 transmit(Z,fs);
