@@ -112,4 +112,27 @@ if sum(sum(B-Y)) > 1e-5
 else
     fprintf('You all good with synchronization.\n');
 end
-    
+
+%% Tests for generating codebooks
+fs = 48000;
+fc = 400;
+P = 100;
+L = 5;
+fieldSize = 7;
+book = makeCodebook(fc, fs, P, L, fieldSize);
+
+%% Tests for decoding packets into symbols
+fs = 48000;
+fc = 400;
+P = 100;
+t = 0:1/fs:0.02;
+pulse = chirp(t,600,0.02,2000,'linear');
+packLength = 5;
+m = randi([1 8],1,100);
+y = encodeFSK(m,fc,packLength,P,fs);
+Z = addChirps(y,packLength,fs)';
+A = [pulse Z(length(t)+1:end) pulse];
+B = synchronize(A,packLength,fs,fc,P);
+S = decodeSymbolPackets(B,fs,fc,P, book, fieldSize);
+
+
