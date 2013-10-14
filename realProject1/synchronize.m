@@ -10,7 +10,7 @@ syncPulse = chirp(t,400,0.02,8000,'linear');
 % Get pulse to start and stop data transmission%
 startStop = xcorr(rcv,SSpulse);
 startStop = fftshift(abs(startStop));
-startStop = startStop(1:length(startStop)/2);
+startStop = startStop(1:round(length(startStop)/2));
 [~,sortIndex] = sort(startStop(:),'descend');
 maxIndex = [sortIndex(1) 0];
 epsilon = 200;
@@ -28,7 +28,7 @@ messageLength = endSample - startSample;
 numPeaks = round(messageLength/packLengthSamples); %floor or round
 syncorr = xcorr(rcv,syncPulse);
 syncorr = fftshift(abs(syncorr));
-syncorr = syncorr(1:length(syncorr)/2);
+syncorr = syncorr(1:round(length(syncorr)/2));
 syncPeaks = [startSample zeros(1, numPeaks)];
 [~,sortIndex] = sort(syncorr(:),'descend');
 peaks = 2;

@@ -128,7 +128,7 @@ P = 100;
 t = 0:1/fs:0.02;
 pulse = chirp(t,600,0.02,2000,'linear');
 packLength = 5;
-m = randi([1 8],1,100);
+m = randi([1 7],1,100);
 y = encodeFSK(m,fc,packLength,P,fs);
 Z = addChirps(y,packLength,fs)';
 A = [pulse Z(length(t)+1:end) pulse];
@@ -136,3 +136,8 @@ B = synchronize(A,packLength,fs,fc,P);
 S = decodeSymbolPackets(B,fs,fc,P, book, fieldSize);
 
 
+if (sum(S-m) > 1e-15)
+    fprintf('ERROR in decoding packets.\n');
+else
+    fprintf('Decode packets to symbols successfully.\n');
+end
