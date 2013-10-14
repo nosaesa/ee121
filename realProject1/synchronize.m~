@@ -1,10 +1,12 @@
-function [A] = synchronize(rcv)
+function [A] = synchronize(rcv,packLength,fs,fc,P)
 %SYNCHRONIZE Find chirps and get data streams from rcv
-%   Detailed explanation goes here
 t = 0:1/fs:0.02;
+timeStep = 0:1/fs:P/fc-1/fs;
+packLengthSamples = (packLength)*length(timeStep) + length(t);
+% packLengthSamples is the number of samples in a packet (with pulse)
 SSpulse = chirp(t,600,0.02,2000,'linear');
 syncPulse = chirp(t,400,0.02,8000,'linear');
-% Get pulse to start and stop data transmission
+% Get pulse to start and stop data transmission%
 startStop = xcorr(rcv,SSpulse);
 startStop = fftshift(abs(startStop));
 startStop = startStop(1:length(startStop)/2);
@@ -17,8 +19,14 @@ for i = sortIndex(2:end)
         break
     end
 end
-startSample = min(maxIndex) + length(t);
+startSample = min(maxIndex);
 endSample = max(maxIndex) - 1;
+%-----------------------------------------------
+messageLength = endSample - startSample;
+numPeaks = round(messageLength/packLengthSamples); %floor or round
 
-ends = [];
+
+
+
+
 end
