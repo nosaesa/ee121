@@ -42,7 +42,7 @@ end
 %% Test packet decoding
 [~, vecs, binary] = makeLookupTable(G, fieldSize);
 
-out = decodePackets(symbols, vecs, binary, chunkSize/rate);
+out = decodePackets(symbols', vecs, binary, chunkSize/rate);
 
 if (sum(out ~= bits) ~= 0)
     fprintf('ERROR in decoding of packets.\n');

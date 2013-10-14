@@ -1,5 +1,5 @@
 function [G] = createGeneratorMatrix(degree, chunkSize, rate)
     rows = chunkSize/rate;
     columns = chunkSize;
-    G = ceil(rand(rows, columns)*degree);
+    G = randi([0 degree-1], rows, columns);
 end
