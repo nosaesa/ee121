@@ -1,9 +1,12 @@
-function transmit(Z,fs)
+function out = transmit(Z,fs,suppressAudio)
 %TRANSMIT Spit it out motherfucker
 Z = Z';
 t = 0:1/fs:0.02;
 pulse = chirp(t,600,0.02,2000,'linear');
-sound([pulse Z(length(t)+1:end) pulse] ,fs);
+out = [pulse Z(length(t)+1:end) pulse];
+if ~suppressAudio
+    sound(out ,fs);
+end
 
 %-----TEST CODE JUNK THROW AWAY IF NOT IN USE
 %{

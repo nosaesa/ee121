@@ -9,12 +9,14 @@ fc = 400;
 fs = 48000;
 P = 50;
 packetLength = 10;
+ar = audiorecorder(fs, 16, 1);
+
 
 filein = 'sahai.jpg';
 
 % read our bits
 %testbits = file2Bits(filein);
-testbits = randi([0 1], 1000, 1);
+testbits = randi([0 1], 100, 1);
 
 % make G
 G = createGeneratorMatrix(fieldSize, chunkSize, rate);
@@ -30,9 +32,13 @@ out = addChirps(signal, packetLength, fs);
 
 out = transmit(out, fs,1);
 
+% transmit / record simulatneously
+record(ar), sound(out,fs), pause(10),stop(ar);
+rcv = getaudiodata(ar, 'double')';
+%%
 % synchronize received signal and block into packets
-A = synchronize(out,packetLength,fs,fc,P);
-
+A = synchro(rcv,packetLength,fs,fc,P);
+%%
 % creating a codebook and lookup table to be used in decoding
 codeBook = makeCodebook(fc,fs,P,L,fieldSize);
 [~, vecs, binary] = makeLookupTable(G, fieldSize);
