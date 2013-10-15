@@ -23,6 +23,7 @@ G = createGeneratorMatrix(fieldSize, chunkSize, rate);
 
 % turn bits into symbols
 symbols = codePacketGenerator(G, testbits, fieldSize);
+symbols = mod(symbols+1, fieldSize+1);
 
 % encode symbols using FSK
 signal = encodeFSK(symbols,fc,chunkSize,P,fs);
@@ -45,6 +46,7 @@ codeBook = makeCodebook(fc,fs,P,L,fieldSize);
 
 % decode waveforms into symbol packets
 packets = decodeSymbolPackets(A,fs,fc,P,codeBook,fieldSize);
+packets = packets-1;
 
 % decode symbol packets into bits
 out = decodePackets(symbols', vecs, binary, chunkSize/rate);
