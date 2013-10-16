@@ -1,0 +1,5 @@
+function [bits] = file2Bits(filepath)
+    fid = fopen(filepath);
+    m5 = fread(fid, inf, '*uint8');
+    fclose(fid);
+end

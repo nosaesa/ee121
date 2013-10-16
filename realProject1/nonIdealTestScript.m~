@@ -5,10 +5,12 @@ fieldSize = 7;
 chunkSize = 4;
 L = chunkSize;
 rate = .5;
-fc = 400; 
+fc = 1000; 
 fs = 48000;
-P = 50;
+P = 100;
 packetLength = 10;
+ar = audiorecorder(fs, 16, 1);
+
 
 filein = 'sahai.jpg';
 
@@ -17,10 +19,11 @@ filein = 'sahai.jpg';
 testbits = randi([0 1], 100, 1);
 
 % make G
-G = createJeffGeneratorMatrix(fieldSize, chunkSize, rate);
+G = createGeneratorMatrix(fieldSize, chunkSize, rate);
 
 % turn bits into symbols
-symbols = codeJeffPacketGenerator(G, testbits, fieldSize);
+symbols = codePacketGenerator(G, testbits, fieldSize);
+symbols = mod(symbols+1, fieldSize+1);
 
 % encode symbols using FSK
 signal = encodeFSK(symbols,fc,chunkSize,P,fs);
@@ -30,15 +33,20 @@ out = addChirps(signal, packetLength, fs);
 
 out = transmit(out, fs,1);
 
+% transmit / record simulatneously
+record(ar), sound(out,fs), pause(10),stop(ar);
+rcv = getaudiodata(ar, 'double')';
+
 % synchronize received signal and block into packets
-A = synchronize(out,packetLength,fs,fc,P);
+A = synchro(rcv,packetLength,fs,fc,P);
 
 % creating a codebook and lookup table to be used in decoding
 codeBook = makeCodebook(fc,fs,P,L,fieldSize);
-[~, vecs, binary] = makeJeffLookupTable(G, fieldSize);
+[~, vecs, binary] = makeLookupTable(G, fieldSize);
 
 % decode waveforms into symbol packets
 packets = decodeSymbolPackets(A,fs,fc,P,codeBook,fieldSize);
+packets = packets-1;
 
 % decode symbol packets into bits
 out = decodePackets(packets', vecs, binary, chunkSize/rate);

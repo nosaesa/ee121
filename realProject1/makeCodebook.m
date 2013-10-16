@@ -1,6 +1,7 @@
 function [ book ] = makeCodebook(fc, fs, P, L, fieldSize)
 %UNTITLED3 Summary of this function goes here
 %   Detailed explanation goes here
+% L is the number of symbols/tones per timestep
 T = P/fc;
 t = 0:1/fs:T-1/fs;
 

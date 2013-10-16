@@ -53,7 +53,7 @@ codeBook = makeCodebook(fc,fs,P,L,fieldSize);
 % decode waveforms into symbol packets
 packets = decodeSymbolPackets(A,fs,fc,P,codeBook,fieldSize);
 packets = packets-1;
-display(length(find(packets - symbols)))
+display(length(find(packets - symbols == 0)))
 plot(packets - symbols)
 % decode symbol packets into bits
 out = decodePackets(packets', vecs, binary, chunkSize/rate);
