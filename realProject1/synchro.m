@@ -23,7 +23,6 @@ for i = 2:length(sortIndex);
 end
 startSample = min(maxIndex) + 1;
 endSample = max(maxIndex) - 1;
-keyboard;
 %-----------------------------------------------
 % Find the actual peaks in the signal and create expected packets
 messageLength = endSample - startSample;
