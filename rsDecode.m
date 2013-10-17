@@ -7,20 +7,22 @@ if (size(code,2) ~= 1)
     code = code';
 end
 
-l = length(code);
+L = length(code);
 n = 3;
-switch l
-    case mod(l, 7) == 0
-        n = 7;
-    case mod(l, 6) == 0
-        n = 6;
-    case mod(l, 5) == 0
-        n = 5;
-    case mod(l, 4) == 0
-        n = 4;
+if mod(L, 4) == 0
+    n = 4;
+end
+if mod(L, 5) == 0
+    n = 5;
+end
+if mod(L, 6) == 0
+    n = 6;
+end
+if mod(L, 7) == 0
+    n = 7;
 end
 
-H = comm.RSEncoder('PrimitivePolynomialSource', 'Property', 'PrimitivePolynomial', fliplr(de2bi(primpoly(3))), 'MessageLength', n-2, 'CodewordLength', n);
+H = comm.RSDecoder('PrimitivePolynomialSource', 'Property', 'PrimitivePolynomial', fliplr(de2bi(primpoly(3))), 'MessageLength', n-2, 'CodewordLength', n);
 message = step(H,code);
 end
 
