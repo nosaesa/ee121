@@ -15,7 +15,6 @@ function [ out ] = hammingEncode( bits, n )
     end
     b = reshape(bits, k, length(bits)/k)';
 
-    out = mod(b*g, 2);
-
+    out = timsCoolFunction(mod(b*g, 2));
 end
 
