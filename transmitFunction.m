@@ -37,19 +37,18 @@ for i = 1:size(sendFiles, 3)
     symbols(i,:) = codesToSymbols(sendFiles(:,:,i));
 end
 
-symbolsEncoded = zeros(size(symbols,1), size(symbols,2)+2*numErrors);
-for i = 1:size(symbols,1)
-    symbolsEncoded(i,:) = rsEncode(symbols(i,:), numErrors);
-end
-
-[signals, ~] = encodeNewFSK(symbols, fc, symAtOnce, P, fs);
-
-signalOut = zeros(size(signals));
-for i = 1:size(signals, 3)
-    syncedSignal = addChirps(signals(:,:,i), timeStepsPerPacket, fs, chirpLength); 
-
-    signalOut(:,:,i) = transmit(syncedSignal, fs, chirpLength);
-end
+% symbolsEncoded = zeros(size(symbols,1), size(symbols,2)+2*numErrors);
+% for i = 1:size(symbols,1)
+%     symbolsEncoded(i,:) = rsEncode(symbols(i,:), numErrors);
+% end
+% 
+% [signals, ~] = encodeNewFSK(symbols, fc, symAtOnce, P, fs);
+% 
+% signalOut = zeros(size(signals));
+% for i = 1:size(signals, 3)
+%     syncedSignal = addChirps(signals(:,:,i), timeStepsPerPacket, fs, chirpLength); 
+%     signalOut(:,:,i) = transmit(syncedSignal, fs, chirpLength);
+% end
 %modulate sendFiles to signals
 %send sendFiles in order and wait for positive response on each
 
