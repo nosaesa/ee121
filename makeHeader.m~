@@ -8,5 +8,6 @@ function [ bits ] = makeHeader( filename, bitSequence, seqNum )
     hash = hash(:)'-'0';
     hash = hash';
     bits = [toHash(1:45); hash(1:32)];
+    keyboard;
 end
 
