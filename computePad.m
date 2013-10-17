@@ -7,8 +7,11 @@ while found == 0
   temp = (pad + messageLength) * RSratio;
   if mod(temp, 11) == 0
       found = 1;
+ 
+  else
+      pad = pad+1;
   end
-pad = pad+1;  
+  
 end
 
 end
