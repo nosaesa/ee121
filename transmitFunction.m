@@ -14,7 +14,7 @@ hammingInput = 11;
 hammingOutput = 15;
 headerLength = 77;
 
-%matrix of data packets with headers
+%miniFiles = matrix of file packets with headers
 miniFiles = sliceFileAddHeader(bits,headerLength,numFiles,fileName);
 fileLength = length(miniFiles(1,:));
 
@@ -23,6 +23,7 @@ sendFiles = zeros(numFiles,fileLength/hammingInput,hammingOutput);
 for i = 1:numFiles
     sendFiles(i,:,:) = hammingEncode(miniFiles(i,:),hammingInput);
 end
+
 
 %modulate sendFiles to signals
 %send sendFiles in order and wait for positive response on each

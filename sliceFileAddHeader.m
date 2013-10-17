@@ -20,6 +20,5 @@ files = [Headers reshape(paddedBits,numFiles,chunkLength)];
 fileLength = length(files(1,:));
 hammPad = zeros(numFiles,(floor(fileLength/11)+1)*11 - fileLength);
 files = [files hammPad];
-keyboard;
 end
 
