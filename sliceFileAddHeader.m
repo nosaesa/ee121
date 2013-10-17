@@ -9,7 +9,6 @@ else
 end
 
 Headers = zeros(numFiles,headerLength);
-keyboard;
 for i = 1:numFiles
     if i == numFiles
         Headers(i,:) = makeHeader(fileName,(bits((i-1)*chunkLength+1:end))',mod(i,4));
@@ -17,6 +16,7 @@ for i = 1:numFiles
         Headers(i,:) = makeHeader(fileName,(bits((i-1)*chunkLength+1:i*chunkLength))',mod(i,4));
     end
 end
+
 
 %padding for file length
 paddedBits = [bits zeros(1,padBits)];
