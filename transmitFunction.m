@@ -1,5 +1,12 @@
 function [ sendFiles,miniFiles, signalOut ] = transmitFunction(numFiles)
 %TESTFUNCTION Will test everything
+symAtOnce = 4;
+P = 20;
+fc = 1000;
+fs = 48000;
+numErrors = 10;
+timeStepsPerPacket = 5;
+chirpLength = 0.02;
 
 if ~exist('testFile')
     bits = randi([0 1],1,8000);
@@ -30,19 +37,21 @@ for i = 1:size(sendFiles, 3)
     symbols(i,:) = codesToSymbols(sendFiles(:,:,i));
 end
 
-symAtOnce = 4;
-P = 20;
-fc = 1000;
-fs = 48000;
+symbolsEncoded = zeros(size(symbols,1), size(symbols,2)+2*numErrors);
+for i = 1:size(symbols,1)
+    symbolsEncoded(i,:) = rsEncode(symbols(i,:), numErrors);
+end
 
-signals = encodeNewFSK(symbols, fc, symAtOnce, P, fs);
+[signals, ~] = encodeNewFSK(symbols, fc, symAtOnce, P, fs);
 
+signalOut = zeros(size(signals));
+for i = 1:size(signals, 3)
+    syncedSignal = addChirps(signals(:,:,i), timeStepsPerPacket, fs, chirpLength); 
 
-signalOut = transmit(signals, fs, 0.02);
+    signalOut(:,:,i) = transmit(syncedSignal, fs, chirpLength);
+end
 %modulate sendFiles to signals
 %send sendFiles in order and wait for positive response on each
-
-
 
 end
 
