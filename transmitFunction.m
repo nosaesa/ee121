@@ -1,11 +1,11 @@
-function [ sendFiles,miniFiles, signalOut ] = transmitFunction(numFiles)
+function [ sendFiles, miniFiles, signalOut, bits ] = transmitFunction(numFiles)
 %TESTFUNCTION Will test everything
 symAtOnce = 4;
 P = 20;
 fc = 1000;
 fs = 48000;
 numErrors = 10;
-timeStepsPerPacket = 5;
+timeStepsPerPacket = 2;
 chirpLength = 0.02;
 
 if ~exist('testFile')
@@ -19,7 +19,7 @@ end
 %We are using Hamming 11 15 codes
 hammingInput = 11;
 hammingOutput = 15;
-headerLength = 77;
+headerLength = 78;
 
 %miniFiles = matrix of file packets with headers
 miniFiles = sliceFileAddHeader(bits,headerLength,numFiles,fileName);
@@ -37,21 +37,18 @@ for i = 1:size(sendFiles, 3)
     symbols(i,:) = codesToSymbols(sendFiles(:,:,i));
 end
 
-symbolsEncoded = zeros(size(symbols,1), size(symbols,2)+2*numErrors);
+
 for i = 1:size(symbols,1)
-    symbolsEncoded(i,:) = rsEncode(symbols(i,:), numErrors);
+    symbolsEncoded(i,:) = rsEncode(symbols(i,:));
 end
 
-[signals, ~] = encodeNewFSK(symbols, fc, symAtOnce, P, fs);
+[signals, ~] = encodeNewFSK(symbolsEncoded, fc, symAtOnce, P, fs);
 
-signalOut = zeros(size(signals));
+%signalOut = zeros(size(signals));
 for i = 1:size(signals, 3)
     syncedSignal = addChirps(signals(:,:,i), timeStepsPerPacket, fs, chirpLength); 
 
     signalOut(:,:,i) = transmit(syncedSignal, fs, chirpLength);
 end
-%modulate sendFiles to signals
-%send sendFiles in order and wait for positive response on each
-
 end
 

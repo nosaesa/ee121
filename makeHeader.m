@@ -4,11 +4,11 @@ function [ bits ] = makeHeader( filename, bitSequence, seqNum )
     len = de2bi(length(bitSequence), 16, 'left-msb')';
     biName = biName(:)'-'0';
     biName = biName';
-    toHash = [biName; seqNum; len; bitSequence];
+    toHash = [biName; de2bi(seqNum, 2, 'left-msb')'; len; bitSequence];
     hash = DataHash(toHash);
     hash = dec2bin(hash,8);
     hash = hash(:)'-'0';
     hash = hash';
-    bits = [toHash(1:45); hash(1:32)];
+    bits = [toHash(1:46); hash(1:32)];
 end
 
