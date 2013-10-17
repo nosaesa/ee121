@@ -9,8 +9,7 @@ else
     fileName = 'randomBits'
 end
 
-%matrix of data packets with headers
-miniFiles = sliceFileAddHeader(bits,numChunks);
+miniFiles = sliceFileAddHeader(bits,numChunks);%matrix of data packets with headers
 
 
 
