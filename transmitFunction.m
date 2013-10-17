@@ -1,4 +1,4 @@
-function [ sendFiles,miniFiles ] = testFunction(numFiles)
+function [ sendFiles,miniFiles, signalOut ] = transmitFunction(numFiles)
 %TESTFUNCTION Will test everything
 
 if ~exist('testFile')
@@ -24,7 +24,21 @@ for i = 1:numFiles
     sendFiles(i,:,:) = hammingEncode(miniFiles(i,:),hammingInput);
 end
 
+[r,c,d] = size(sendFiles);
+symbols = zeros(d,r*c/3);
+for i = 1:size(sendFiles, 3)
+    symbols(i,:) = codesToSymbols(sendFiles(:,:,i));
+end
 
+symAtOnce = 4;
+P = 20;
+fc = 1000;
+fs = 48000;
+
+signals = encodeNewFSK(symbols, fc, symAtOnce, P, fs);
+
+
+signalOut = transmit(signals, fs, 0.02);
 %modulate sendFiles to signals
 %send sendFiles in order and wait for positive response on each
 
