@@ -1,6 +1,0 @@
-function = file2Bits([bits], filepath)
-    fid = fopen(filepath, w);
-    filepath = abs(fread(fid, inf, 'bit1'));
-    fclose(fid);
-    
-end
