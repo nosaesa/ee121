@@ -1,10 +1,9 @@
 clear all; close all; clc;
-symError = [];
-bitError = [];
+symErrors = [];
 %%
 fc = 1000;
 fs = 48000;
-P = 30;
+P = 15;
 chirpLength = 0.02;
 ar = audiorecorder(fs, 16, 1);
 fieldSize = 8;
@@ -13,7 +12,7 @@ fieldSize = 8;
 N = 4;
 
 % x is how many 57-bit messages to send
-x = 57;
+x = 200;
 bits = randi([0 1],1,57*x);
 
 % n = 4 for hamming 11, 15
@@ -22,15 +21,15 @@ n = 6;
 syndrome = syndtable(H);
 
 C = hammingEncode(bits,n);
-%C = timsCoolFunction(C);
+C = timsCoolFunction(C);
 
 M = codesToSymbols(C);
 
 [Y,numPad] = encodeNewFSK(M,fc,N,P,fs);
 
 fprintf('Number of timesteps: %d\n',size(Y,1));
-%%
-timeStepsPerPacket = 100;
+
+timeStepsPerPacket = 5;
 
 out = addChirps(Y, timeStepsPerPacket, fs, chirpLength);
 
@@ -50,22 +49,18 @@ symbols = decodeSymbolPackets(A,fs,fc,P,codeBook,fieldSize) - 1;
 
 output = hammingDecode(symbols,syndrome,H,G);
 
-rate = round(size(Y,1)*N*57/21*fs/length(signalOut));
-
-symError = [symError length(find(abs(M - symbols(1:end-numPad)) ~= 0))];
-bitError = [bitError length(find(abs(output - bits) ~= 0))];
+dataRate = round(size(Y,1)*N*57/21*fs/length(signalOut));
+symErrors = [symErrors length(find(symbols(1:end-numPad) ~= M))];
 
 if (sum(abs(bits-output)) ~= 0)
-    
     fprintf('ERROR in communication\n');
-    %{
+    
     figure;
     stem(abs(bits-output));
     title('Bit Errors');
     figure;
     stem(abs(M-symbols(1:end-numPad)));
     title('Symbol Errors');
-    %}
 else
-    fprintf('SUCCESSFUL communication! %d bits/sec\n',rate);
+    fprintf('SUCCESSFUL communication! %d bits/sec\n',dataRate);
 end

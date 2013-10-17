@@ -1,4 +1,4 @@
-function [ c ] = rsEncode( message, numErrors )
+function [ c ] = rsEncode( message )
 %   rsEncode encodes symbols \in {1,...,2^m} in a Reed-Solomon code
 %   message is the array of symbols to be encoded
 %   numBits is the number of bits required to represent a symbol
@@ -6,7 +6,7 @@ function [ c ] = rsEncode( message, numErrors )
 if (size(message,2) ~= 1)
     message = message';
 end
-H = comm.RSEncoder(length(message)+2*numErrors,length(message));
+%H = comm.RSEncoder(length(message)+2*numErrors,length(message));
+H = comm.RSEncoder;
 c = step(H,message);
 end
-

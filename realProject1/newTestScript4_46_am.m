@@ -1,6 +1,5 @@
 clear all; close all; clc;
-symError = [];
-bitError = [];
+symErrors = [];
 %%
 fc = 1000;
 fs = 48000;
@@ -9,32 +8,28 @@ chirpLength = 0.02;
 ar = audiorecorder(fs, 16, 1);
 fieldSize = 8;
 
-% number of errors we want to correct for
-numErrors = 10;
-
 % number of symbols/tones per timestep
 N = 4;
 
-% x is how many 11-bit messages to send
-x = 900;
-bits = randi([0 1],1,11*x);
+% x is how many 57-bit messages to send
+x = 57;
+bits = randi([0 1],1,57*x);
 
 % n = 4 for hamming 11, 15
-n = 4;
+n = 6;
 [H,G] = hammgen(n);
 syndrome = syndtable(H);
 
 C = hammingEncode(bits,n);
 C = timsCoolFunction(C);
+
 M = codesToSymbols(C);
 
-encodedM = rsEncode(M,numErrors)';
-
-[Y,numPad] = encodeNewFSK(encodedM,fc,N,P,fs);
+[Y,numPad] = encodeNewFSK(M,fc,N,P,fs);
 
 fprintf('Number of timesteps: %d\n',size(Y,1));
 
-timeStepsPerPacket = 226;
+timeStepsPerPacket = 5;
 
 out = addChirps(Y, timeStepsPerPacket, fs, chirpLength);
 
@@ -52,27 +47,20 @@ codeBook = makeCodebook(fc,fs,P,N,fieldSize);
 % decode waveforms into symbol packets
 symbols = decodeSymbolPackets(A,fs,fc,P,codeBook,fieldSize) - 1;
 
-[symbols,rsErrors] = rsDecode(symbols,numErrors);
-
-symbols = symbols';
-
 output = hammingDecode(symbols,syndrome,H,G);
 
 dataRate = round(length(bits)/(length(signalOut)/fs));
+symErrors = [symErrors length(find(symbols(1:end-numPad) ~= M))];
 
-symError = [symError length(find(abs(M - symbols(1:end-numPad)) ~= 0))];
-bitError = [bitError length(find(abs(output - bits) ~= 0))];
-    if (sum(abs(bits-output)) ~= 0)
-        fprintf('ERROR in communication\n');
-        close all;
-        %{
-        figure;
-        stem(abs(bits-output));
-        title('Bit Errors')
-        figure;
-        stem(abs(M-symbols(1:end-numPad)));
-        title('Symbol Errors')
-        %}
-    else
-        fprintf('SUCCESSFUL communication! %d bits/sec\n',dataRate);
-    end
+if (sum(abs(bits-output)) ~= 0)
+    fprintf('ERROR in communication\n');
+    
+    figure;
+    stem(abs(bits-output));
+    title('Bit Errors');
+    figure;
+    stem(abs(M-symbols(1:end-numPad)));
+    title('Symbol Errors');
+else
+    fprintf('SUCCESSFUL communication! %d bits/sec\n',dataRate);
+end

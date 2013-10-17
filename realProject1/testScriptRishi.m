@@ -10,17 +10,17 @@ ar = audiorecorder(fs, 16, 1);
 fieldSize = 8;
 
 % number of errors we want to correct for
-numErrors = 20;
+numErrors = 30;
 
 % number of symbols/tones per timestep
 N = 3;
 
 % x is how many 11-bit messages to send
-x = 98;
-bits = randi([0 1],1,57*x);
+x = 201;
+bits = randi([0 1],1,11*x);
 
 % n = 4 for hamming 11, 15
-n = 6;
+n = 4;
 [H,G] = hammgen(n);
 syndrome = syndtable(H);
 
@@ -34,7 +34,7 @@ encodedM = rsEncode(M,numErrors)';
 
 fprintf('Number of timesteps: %d\n',size(Y,1));
 
-timeStepsPerPacket = 10;
+timeStepsPerPacket = 5;
 
 out = addChirps(Y, timeStepsPerPacket, fs, chirpLength);
 
