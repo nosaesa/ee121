@@ -1,7 +1,12 @@
 function [files] = sliceFileAddHeader(bits,headerLength,numFiles,fileName)
 %SLICEFILEADDHEADER Slices file into chunks and add header packet to each
-chunkLength = floor(length(bits)/(numFiles-1));
-padBits = chunkLength - mod(length(bits),numFiles-1);
+if numFiles == 1
+    chunkLength = length(bits);
+    padBits = 0;
+else
+    chunkLength = floor(length(bits)/(numFiles-1));
+    padBits = chunkLength - mod(length(bits),numFiles-1);
+end
 
 Headers = zeros(numFiles,headerLength);
 keyboard;
