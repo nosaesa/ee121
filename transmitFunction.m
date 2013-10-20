@@ -1,53 +1,38 @@
-function [ sendFiles, miniFiles, signalOut, bits, symbols ] = transmitFunction(numFiles)
-%TESTFUNCTION Will test everything
+function [ signalOut, fileBits, symFSK ] = transmitFunction()
+
+fileBits = file2Bits('test.txt');
+
+header = makeHeader('out.txt', fileBits);
+
+bits = [header; fileBits];
+
+
 symAtOnce = 4;
 P = 20;
 fc = 1000;
 fs = 48000;
-timeStepsPerPacket = 29;
+timeStepsPerPacket = 97;
 chirpLength = 0.02;
 
-if ~exist('testFile')
-    bits = randi([0 1],1,1000);
-    fileName = 'randomBits';
-else
-    bits = file2Bits(testFile);
-    fileName = testFile;
+baseBitStringLength = 300;
+rseN = 7;
+rseK = 5;
+tagLength = 34;
+
+
+bitsIn = divideAndTagBits(bits', baseBitStringLength, 2, tagLength);
+encodedBits = [];
+for i = 1:size(bitsIn,1)
+    encodedBits = [encodedBits rsEncode(rseN, rseK, bitsIn(i,:)')' zeros(1,7)];
 end
 
-%We are using Hamming 11 15 codes
-hammingInput = 11;
-hammingOutput = 15;
-headerLength = 78;
+bitsEncoded = hammingEncode(encodedBits, 11);
 
-%miniFiles = matrix of file packets with headers
-miniFiles = sliceFileAddHeader(bits,headerLength,numFiles,fileName);
-fileLength = length(miniFiles(1,:));
+symFSK = codesToSymbols(bitsEncoded);
 
-sendFiles = zeros(fileLength/hammingInput,hammingOutput,numFiles);
+[s, pad] = encodeNewFSK(symFSK, fc, symAtOnce, P, fs);
 
-for i = 1:numFiles
-    sendFiles(:,:,i) = hammingEncode(miniFiles(i,:),hammingInput);
-end
-
-[r,c,d] = size(sendFiles);
-symbols = zeros(d,r*c/3);
-for i = 1:size(sendFiles, 3)
-    symbols(i,:) = codesToSymbols(sendFiles(:,:,i));
-end
-
-for i = 1:size(symbols,1)
-    symbolsEncoded(i,:) = rsEncode(symbols(i,:))';    
-end
-
-for i = 1:size(symbolsEncoded, 1)
-    [s, ~] = encodeNewFSK(symbolsEncoded(i,:), fc, symAtOnce, P, fs);
-    signals(:,:,i) = s;
-end
-%signalOut = zeros(size(signals));
-for i = 1:size(signals, 3)
-    syncedSignal = addChirps(signals(:,:,i), timeStepsPerPacket, fs, chirpLength); 
-    signalOut(i,:) = transmit(syncedSignal, fs, chirpLength);
-end
+syncedSignal = addChirps(s, timeStepsPerPacket, fs, chirpLength); 
+signalOut = transmit(syncedSignal, fs, chirpLength);
 end
 

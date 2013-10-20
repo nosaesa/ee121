@@ -1,30 +1,17 @@
-function [ realBits, err ] = removeHeader( bits, lengthBits, seqBits, hashBits, nameBits )
-name = bits(1:nameBits);
-seqStart = nameBits+1;
-seqNum = bits(seqStart:seqStart+seqBits-1);
-lenStart = seqStart+seqBits;
-len = bits(lenStart:lenStart+lengthBits-1);
+function [ realBits, name ] = removeHeader( bits, lengthBits, nameBits )
+%reading the name incorrectly and needs to be fixed
+len = bits(1:lengthBits);
 length = bi2de(len, 'left-msb');
-hashStart = lenStart+lengthBits;
-hash = bits(hashStart:hashStart+hashBits-1);
+nameLen = bits(lengthBits+1:lengthBits+nameBits);
+nameLength = bi2de(nameLen', 'left-msb');
 
-keyboard;
+nameData = bits(lengthBits+nameBits+1:lengthBits+nameBits+nameLength);
+name = char(bi2de(reshape(nameData, 8, []).'))';
 
-dataStart = hashStart+hashBits;
-dataBits = bits(dataStart:dataStart+length);
+startIndex = lengthBits+nameBits+nameLength+1;
+endIndex = lengthBits+nameBits+nameLength+length;
+realBits = bits(startIndex:endIndex);
 
-toHash = [name; seqNum; len; dataBits];
-
-calculated = DataHash(toHash);
-calculated = dec2bin(calculated,8);
-calculated = calculated(:)'-'0';
-actualHash = calculated(1:32);
-
-if sum(hash ~= actualHash) ~= 0
-    err = 1;
-end
-
-realBits = dataBits;
 
 end
 

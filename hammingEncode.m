@@ -20,8 +20,10 @@ function [out] = hammingEncode( bits, n )
     
     b = reshape(bits, k, length(bits)/k)';
     out = mod(b*g, 2);
+    
     [rows, cols] = size(out);
     out = reshape(out, cols, rows);
     out = reshape(out', rows, cols);
+    
 end
 

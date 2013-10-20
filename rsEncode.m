@@ -1,4 +1,4 @@
-function [ c ] = rsEncode( message )
+function [ c ] = rsEncode( n, k, message )
 %   rsEncode encodes symbols \in {1,...,2^m} in a Reed-Solomon code
 %   message is the array of symbols to be encoded
 %   numBits is the number of bits required to represent a symbol
@@ -7,25 +7,7 @@ if (size(message,2) ~= 1)
     message = message';
 end
 
-%find k
-L = length(message);
-k = 1;
-if mod(L, 2) == 0
-    k = 2;
-end
-if mod(L, 3) == 0
-    k = 3;
-end
-if mod(L, 4) == 0
-    k = 4;
-end
-if (mod(L,5) == 0)
-    k = 5;
-end
-
-
-
-H = comm.RSEncoder('PrimitivePolynomialSource', 'Property', 'PrimitivePolynomial', fliplr(de2bi(primpoly(3))), 'MessageLength', k, 'CodewordLength', k+2);
+H = comm.RSEncoder(n,k,'BitInput', true);
 c = step(H,message);
 
 end

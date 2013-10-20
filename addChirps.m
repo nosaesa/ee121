@@ -3,7 +3,7 @@ function [Z] = addChirps(Y,timeStepsPerPacket,fs,chirpLength)
 %   Detailed explanation goes here
 %   packLength is the number of timesteps (rows of Y) per packet.
 %   Each packet gets a chirp preamble for synchronization.
-
+keyboard;
 if mod(size(Y,1),timeStepsPerPacket) ~= 0
     error('addChirps:timeStepsPerPacket must be a factor of number of timesteps (size(Y,1))')
 end
