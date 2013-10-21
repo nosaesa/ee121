@@ -1,4 +1,4 @@
-function [ outBits ] = checkCorrectness( bits, baseLength, blocksPerHash, tagLength )
+function [ outBits, errors ] = checkCorrectness( bits, baseLength, blocksPerHash, tagLength )
 % bits is a string of bits of variable length
 % baseLength is block size like 300 that our code is working with
 % blocksPerHash is how many baseLengths we are putting together between
@@ -17,7 +17,7 @@ for i = 0:rounds-1
     calcHash = DataHash(toCheck(33:end));
     calcHash = dec2bin(calcHash,8);
     calcHash = calcHash(:)'-'0';
-    if sum(calcHash(1:32) ~= hash) ~= 0
+    if sum(calcHash(1:32)' ~= hash) ~= 0
         errors(i+1) = 1;
     end
     tag = toCheck(33:33+(tagLength-32)-1);

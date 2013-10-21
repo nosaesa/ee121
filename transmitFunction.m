@@ -1,4 +1,4 @@
-function [ signalOut, fileBits, symFSK ] = transmitFunction()
+function [ signalOut, fileBits, symFSK, encodedBits ] = transmitFunction()
 
 fileBits = file2Bits('test.txt');
 
@@ -8,31 +8,35 @@ bits = [header; fileBits];
 
 
 symAtOnce = 4;
-P = 20;
+P = 10;
 fc = 1000;
 fs = 48000;
 timeStepsPerPacket = 97;
 chirpLength = 0.02;
 
 baseBitStringLength = 300;
+blocksPerHash = 2;
 rseN = 7;
 rseK = 5;
 tagLength = 34;
 
+hammingPad = 7;
 
-bitsIn = divideAndTagBits(bits', baseBitStringLength, 2, tagLength);
+
+bitsIn = divideAndTagBits(bits', baseBitStringLength, blocksPerHash, tagLength);
+syncedSignal = [];
+symFSK = [];
 encodedBits = [];
 for i = 1:size(bitsIn,1)
-    encodedBits = [encodedBits rsEncode(rseN, rseK, bitsIn(i,:)')' zeros(1,7)];
+    encodedBits(i,:) = [rsEncode(rseN, rseK, bitsIn(i,:)')' zeros(1,hammingPad)];
+
+
+    bitsEncoded = hammingEncode(encodedBits(i,:), 11);
+
+    symFSK(i,:) = codesToSymbols(bitsEncoded);
+    [s, pad] = encodeNewFSK(symFSK(i,:), fc, symAtOnce, P, fs);
+
+    syncedSignal = [syncedSignal addChirps(s, timeStepsPerPacket, fs, chirpLength)]; 
 end
-
-bitsEncoded = hammingEncode(encodedBits, 11);
-
-symFSK = codesToSymbols(bitsEncoded);
-
-[s, pad] = encodeNewFSK(symFSK, fc, symAtOnce, P, fs);
-
-syncedSignal = addChirps(s, timeStepsPerPacket, fs, chirpLength); 
 signalOut = transmit(syncedSignal, fs, chirpLength);
 end
-
