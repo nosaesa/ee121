@@ -1,8 +1,8 @@
 function [ signalOut, fileBits, symFSK, encodedBits ] = transmitFunction2()
 
-fileBits = file2Bits('test.jpg');
+fileBits = file2Bits('test.png');
 
-header = makeHeader('test.jpg', fileBits);
+header = makeHeader('out.png', fileBits);
 
 bits = [header; fileBits];
 

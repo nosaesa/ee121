@@ -13,7 +13,7 @@ numPackets = size(Y,1)/timeStepsPerPacket;
 Y = reshape(Y',size(Y,2)*timeStepsPerPacket,numPackets)';
 
 t = 0:1/fs:chirpLength;
-pulse = chirp(t,400,chirpLength,8000,'linear');
+pulse = chirp(t,400,chirpLength,8000,'quadratic');
 pulses = repmat(pulse,numPackets,1);
 
 Z = [pulses Y];
