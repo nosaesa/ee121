@@ -6,8 +6,9 @@ ar = audiorecorder(fs, 16, 1);
 %%
 %record(ar),pause(0.5),tic,sound(signalOut,fs), pause(length(signalOut)/fs + 1),stop(ar);
 %
-
-tic, record(ar), pause(length(signalOut)/fs + 3), stop(ar);
+t = 0:1/fs:1-1/fs;
+f = cos(2*pi*400*t);
+tic, record(ar),sound(f,fs),pause(1.0001),sound(signalOut,fs),stop(ar);
 rcv = getaudiodata(ar, 'double')';
 %%
 rcv = signalOut;

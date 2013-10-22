@@ -17,7 +17,6 @@ fieldSize = 8;
 hamm = 3;
 hammingPad = 0;
 
-keyboard;
 
 A = synchro(rcv,timeStepsPerPacket,fs,fc,P,chirpLength);
 codeBook = makeCodebook(fc,fs,P,symAtOnce,fieldSize);
