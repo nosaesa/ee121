@@ -6,7 +6,9 @@
 % bits must be a multiple of the 1st element of an above tuple
 
 function [out] = hammingEncode( bits, n )
-    
+    if n == 4
+        n = 3;
+    end
     if n == 11
         n = 4;
     end
@@ -14,10 +16,11 @@ function [out] = hammingEncode( bits, n )
         n = 6;
     end
     [~, g, l, k] = hammgen(n);
+    %{
     if (mod(l, 3) ~= 0)
         error('hamming size invalid.\n');
     end
-    
+    %}
     b = reshape(bits, k, length(bits)/k)';
     out = mod(b*g, 2);
     

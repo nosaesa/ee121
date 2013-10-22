@@ -7,6 +7,6 @@ ar = audiorecorder(fs, 16, 1);
 record(ar),pause(0.5),tic,sound(signalOut,fs), pause(length(signalOut)/fs + 1),stop(ar);
 rcv = getaudiodata(ar, 'double')';
 
-%%rcv = signalOut;
+%rcv = signalOut;
 [ name, outBits, symbols, errors, time, interBits ] = decodeFunction2( rcv );
 dataRate = length(inBits)/time

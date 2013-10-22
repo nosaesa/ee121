@@ -3,10 +3,10 @@ symAtOnce = 4;
 P = 10;
 fc = 1000;
 fs = 48000;
-timeStepsPerPacket = 85;
+timeStepsPerPacket = 109;
 chirpLength = 0.02;
 
-symbolsPerBlock = 340;
+symbolsPerBlock = 436;
 
 baseBitStringLength = 300;
 blocksPerHash = 2;
@@ -14,13 +14,12 @@ rseN = 7;
 rseK = 5;
 tagLength = 34;
 fieldSize = 8;
-hamm = 4;
-hammingPad = 4;
+hamm = 3;
+hammingPad = 0;
 
 
 A = synchro(rcv,timeStepsPerPacket,fs,fc,P,chirpLength);
 codeBook = makeCodebook(fc,fs,P,symAtOnce,fieldSize);
-
 symbols = decodeSymbolPackets(A,fs,fc,P,codeBook,fieldSize) - 1;
 symbols = reshape(symbols, symbolsPerBlock, length(symbols)/symbolsPerBlock)';
 totalBits = [];

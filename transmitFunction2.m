@@ -11,7 +11,7 @@ symAtOnce = 4;
 P = 10;
 fc = 1000;
 fs = 48000;
-timeStepsPerPacket = 85;
+timeStepsPerPacket = 109;
 chirpLength = 0.02;
 
 baseBitStringLength = 300;
@@ -20,8 +20,9 @@ rseN = 7;
 rseK = 5;
 tagLength = 34;
 
-hammingPad = 4;
+hammingPad = 0;
 
+hamm = 4;
 
 bitsIn = divideAndTagBits(bits', baseBitStringLength, blocksPerHash, tagLength);
 syncedSignal = [];
@@ -32,7 +33,7 @@ for i = 1:size(bitsIn,1)
     encodedBits(i,:) = temp;
 
 
-    bitsEncoded = hammingEncode(encodedBits(i,:), 11);
+    bitsEncoded = hammingEncode(encodedBits(i,:), 4);
 
     symFSK(i,:) = codesToSymbols(bitsEncoded);
     [s, pad] = encodeNewFSK(symFSK(i,:), fc, symAtOnce, P, fs);
