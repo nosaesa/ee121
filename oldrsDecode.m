@@ -4,13 +4,15 @@ function [ out ] = oldrsDecode( code )
 %   messageLength is the length of the decoded message
 %   numErrors is the desired number of tolerable errors
 
-sym = binary2sym(code, 6);
-sym = reshape(sym, 62, length(sym)/62);
+sym = binary2sym(code, 8);
+sym = reshape(sym, 99, length(sym)/99);
 out = [];
 for i = 1:size(sym, 2)
-    H = comm.RSDecoder('PrimitivePolynomialSource', 'Property', 'PrimitivePolynomial', fliplr(de2bi(primpoly(6))), 'MessageLength', 50, 'CodewordLength', 62);
+    %g = fliplr(de2bi(primpoly(6)));
+    g = [1 0 0 0 1 1 1 0 1];
+    H = comm.RSDecoder('PrimitivePolynomialSource', 'Property', 'PrimitivePolynomial', g, 'MessageLength', 75, 'CodewordLength', 99);
     message = step(H,sym(:,i));
-    bits = sym2binary(message, 6);
+    bits = sym2binary(message, 8);
     out = [out bits];
 end
 

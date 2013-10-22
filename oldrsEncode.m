@@ -7,15 +7,17 @@ if (size(message,2) ~= 1)
     message = message';
 end
 
-sym = binary2sym(message, 6);
+sym = binary2sym(message, 8);
 
-sym = reshape(sym, 50, length(sym)/50);
+sym = reshape(sym, 75, length(sym)/75);
 out = [];
 for i = 1:size(sym, 2)
-    H = comm.RSEncoder('PrimitivePolynomialSource', 'Property', 'PrimitivePolynomial', fliplr(de2bi(primpoly(6))), 'MessageLength', 50, 'CodewordLength', 62);
+    %g = fliplr(de2bi(primpoly(6)));
+    g = [1 0 0 0 1 1 1 0 1];
+    H = comm.RSEncoder('PrimitivePolynomialSource', 'Property', 'PrimitivePolynomial', g, 'MessageLength', 75, 'CodewordLength', 99);
     %H = comm.RSEncoder();
     c = step(H,sym(:,i));
-    bits = sym2binary(c, 6);
+    bits = sym2binary(c, 8);
     out = [ out, bits ];
 end
 

@@ -3,10 +3,10 @@ symAtOnce = 4;
 P = 10;
 fc = 1000;
 fs = 48000;
-timeStepsPerPacket = 109;
+timeStepsPerPacket = 116;
 chirpLength = 0.02;
 
-symbolsPerBlock = 436;
+symbolsPerBlock = 464;
 
 baseBitStringLength = 300;
 blocksPerHash = 2;

@@ -1,8 +1,8 @@
 function [ signalOut, fileBits, symFSK, encodedBits ] = transmitFunction2()
 
-fileBits = file2Bits('test.txt');
+fileBits = file2Bits('test.jpg');
 
-header = makeHeader('out.txt', fileBits);
+header = makeHeader('test.jpg', fileBits);
 
 bits = [header; fileBits];
 
@@ -11,7 +11,7 @@ symAtOnce = 4;
 P = 10;
 fc = 1000;
 fs = 48000;
-timeStepsPerPacket = 109;
+timeStepsPerPacket = 116;
 chirpLength = 0.02;
 
 baseBitStringLength = 300;
@@ -33,7 +33,7 @@ for i = 1:size(bitsIn,1)
     encodedBits(i,:) = temp;
 
 
-    bitsEncoded = hammingEncode(encodedBits(i,:), 4);
+    bitsEncoded = hammingEncode(encodedBits(i,:), hamm);
 
     symFSK(i,:) = codesToSymbols(bitsEncoded);
     [s, pad] = encodeNewFSK(symFSK(i,:), fc, symAtOnce, P, fs);

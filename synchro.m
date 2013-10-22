@@ -7,8 +7,8 @@ t = 0:1/fs:chirpLength;
 timeStep = 0:1/fs:P/fc-1/fs;
 packLengthSamples = (packLength)*length(timeStep) + length(t);
 % packLengthSamples is the number of samples in a packet (with pulse)
-SSpulse = chirp(t,6000,chirpLength,600,'linear');
-syncPulse = chirp(t,400,chirpLength,8000,'linear');
+SSpulse = chirp(t,6000,chirpLength,600,'quadratic');
+syncPulse = chirp(t,400,chirpLength,8000,'quadratic');
 % Get pulse to start and stop data transmission%
 %SSpulse = [SSpulse zeros(1,length(rcv)-length(SSpulse))];
 startStop = xcorr(rcv,SSpulse);
@@ -38,7 +38,7 @@ syncPeaks = [startSample zeros(1, numPeaks-1)];
 [~,sortIndex] = sort(syncorr(:),'descend');
 peaks = 2;
 for i = 1:length(sortIndex)
-    if max(abs(sortIndex(i) - find(syncPeaks))) > epsilon
+    if min(abs(sortIndex(i) - syncPeaks(find(syncPeaks)))) > epsilon
         syncPeaks(peaks) = sortIndex(i);
         peaks = peaks + 1;
         if peaks > numPeaks
