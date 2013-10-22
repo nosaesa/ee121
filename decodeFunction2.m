@@ -3,10 +3,10 @@ symAtOnce = 4;
 P = 10;
 fc = 1000;
 fs = 48000;
-timeStepsPerPacket = 116;
+timeStepsPerPacket = 130;
 chirpLength = 0.02;
 
-symbolsPerBlock = 464;
+symbolsPerBlock = 520;
 
 baseBitStringLength = 300;
 blocksPerHash = 2;
@@ -17,6 +17,7 @@ fieldSize = 8;
 hamm = 3;
 hammingPad = 0;
 
+keyboard;
 
 A = synchro(rcv,timeStepsPerPacket,fs,fc,P,chirpLength);
 codeBook = makeCodebook(fc,fs,P,symAtOnce,fieldSize);
@@ -33,6 +34,7 @@ for i=1:size(symbols,1)
     [bits, errors] = checkCorrectness(out', baseBitStringLength, blocksPerHash, tagLength);
     totalBits = [totalBits; bits];
 end
+
 [fileBits, name] = removeHeader(totalBits, 32, 32);
 time = toc;
 bits2File(fileBits, name);

@@ -11,7 +11,7 @@ symAtOnce = 4;
 P = 10;
 fc = 1000;
 fs = 48000;
-timeStepsPerPacket = 116;
+timeStepsPerPacket = 130;
 chirpLength = 0.02;
 
 baseBitStringLength = 300;
